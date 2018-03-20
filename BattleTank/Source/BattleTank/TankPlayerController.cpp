@@ -2,6 +2,12 @@
 
 #include "TankPlayerController.h"
 
+ATankPlayerController::ATankPlayerController()
+{
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+}
+
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -18,6 +24,13 @@ void ATankPlayerController::BeginPlay()
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("PlayerController Begin Play"))
+}
+
+void ATankPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	UE_LOG(LogTemp, Warning, TEXT("Tick is working on player controller."))
 }
 
 ATank* ATankPlayerController::GetControlledTank() const
