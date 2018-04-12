@@ -3,6 +3,12 @@
 #include "TankAIController.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
 
+ATankAIController::ATankAIController()
+{
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+}
+
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -29,6 +35,16 @@ void ATankAIController::BeginPlay()
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("AIContrlller Begin Play"))
+}
+
+void ATankAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (GetPlayerController())
+	{
+		GetControlledTank()->AimAt(GetPlayerController()->GetActorLocation());
+	}
 }
 
 ATank* ATankAIController::GetControlledTank() const
