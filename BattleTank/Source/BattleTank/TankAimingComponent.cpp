@@ -16,7 +16,6 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
-
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
 	if (!TankBarrel)
@@ -51,9 +50,8 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto BarrelRotation = TankBarrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotation;
-	UE_LOG(LogTemp, Warning, TEXT("AimAsRotator: %s"), *DeltaRotator.ToString())
 
-		TankBarrel->Elevate(5);
+	TankBarrel->Elevate(5);
 }
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)

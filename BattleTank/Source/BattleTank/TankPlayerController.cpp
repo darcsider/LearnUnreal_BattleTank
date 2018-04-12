@@ -3,6 +3,7 @@
 #include "TankPlayerController.h"
 #include "Runtime/Engine/Classes/GameFramework/PlayerController.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
+#include "Tank.h"
 
 ATankPlayerController::ATankPlayerController()
 {

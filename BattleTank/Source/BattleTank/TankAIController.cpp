@@ -2,6 +2,7 @@
 
 #include "TankAIController.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
+#include "Tank.h"
 
 ATankAIController::ATankAIController()
 {
