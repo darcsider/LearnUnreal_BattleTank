@@ -7,6 +7,7 @@
 #include "TankPlayerController.generated.h"
 
 class ATank;
+class UTankAimingComponent;
 
 UCLASS()
 class BATTLETANK_API ATankPlayerController : public APlayerController
@@ -18,8 +19,14 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-private:
+protected:
+	UFUNCTION(BlueprintCallable)
 	ATank * GetControlledTank() const;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void FoundAimingComponent(UTankAimingComponent* AimCompRef);
+
+private:
 
 	UPROPERTY(EditDefaultsOnly)
 	float CrossHairXLocation = 0.5;
