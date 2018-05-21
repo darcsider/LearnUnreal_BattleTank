@@ -8,7 +8,7 @@
 
 void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
-	if (BarrelToSet == nullptr || TurretToSet == nullptr)
+	if (!ensure(BarrelToSet && TurretToSet))
 	{
 		return;
 	}
@@ -17,9 +17,9 @@ void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* Tur
 	TankTurret = TurretToSet;
 }
 
-void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
+void UTankAimingComponent::AimAt(FVector HitLocation)
 {
-	if (!TankBarrel)
+	if (!ensure(TankBarrel))
 	{
 		return;
 	}
@@ -46,7 +46,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
-	if (TankBarrel == nullptr || TankTurret == nullptr)
+	if (!ensure(TankBarrel && TankTurret))
 	{
 		return;
 	}

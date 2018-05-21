@@ -6,7 +6,6 @@
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
-class ATank;
 class UTankAimingComponent;
 
 UCLASS()
@@ -20,9 +19,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	UFUNCTION(BlueprintCallable)
-	ATank * GetControlledTank() const;
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void FoundAimingComponent(UTankAimingComponent* AimCompRef);
 
