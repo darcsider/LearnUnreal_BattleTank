@@ -5,13 +5,17 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "Projectile.h"
+
+// sets default values for this component's properties
+UTankAimingComponent::UTankAimingComponent()
+{
+	PrimaryComponentTick.bCanEverTick = false;
+}
 
 void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
-	if (!ensure(BarrelToSet && TurretToSet))
-	{
-		return;
-	}
+	if (!ensure(BarrelToSet && TurretToSet)) { return; }
 
 	TankBarrel = BarrelToSet;
 	TankTurret = TurretToSet;
@@ -19,10 +23,8 @@ void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* Tur
 
 void UTankAimingComponent::AimAt(FVector HitLocation)
 {
-	if (!ensure(TankBarrel))
-	{
-		return;
-	}
+	if (!ensure(TankBarrel)) { return; }
+
 	FVector LaunchVelocity;
 	FVector StartLocation = TankBarrel->GetSocketLocation(FName("Projectile"));
 
@@ -46,10 +48,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
-	if (!ensure(TankBarrel && TankTurret))
-	{
-		return;
-	}
+	if (!ensure(TankBarrel && TankTurret)) { return; }
 
 	// Work out difference between current barrel rotation and AimDirection
 	auto BarrelRotation = TankBarrel->GetForwardVector().Rotation();
@@ -58,4 +57,24 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 
 	TankBarrel->Elevate(DeltaRotator.Pitch);
 	TankTurret->Rotate(DeltaRotator.Yaw);
+}
+
+void UTankAimingComponent::Fire()
+{
+	if (!ensure(TankBarrel && ProjectileBlueprint)) { return; }
+
+	bool IsReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
+
+	if (IsReloaded)
+	{
+
+		// Spawn a projectile at the socket
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>(
+			ProjectileBlueprint,
+			TankBarrel->GetSocketLocation(FName("Projectile")),
+			TankBarrel->GetSocketRotation(FName("Projectile")));
+
+		Projectile->LaunchProjectile(LaunchSpeed);
+		LastFireTime = GetWorld()->GetTimeSeconds();
+	}
 }

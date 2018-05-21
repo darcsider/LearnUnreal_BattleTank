@@ -15,6 +15,7 @@ enum class EFiringStatus : uint8
 	Aiming
 };
 
+class AProjectile;
 class UTankBarrel;
 class UTankTurret;
 
@@ -24,12 +25,21 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	void AimAt(FVector HitLocation);
 
 	UFUNCTION(BlueprintCallable)
 	void Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
+	void AimAt(FVector HitLocation);
+
+	UFUNCTION(BlueprintCallable)
+	void Fire();
+
 protected:
+	// Sets default values for this component's properties
+	UTankAimingComponent();
+
+	void MoveBarrelTowards(FVector AimDirection);
+
 	// Called when the game starts
 	UTankBarrel* TankBarrel = nullptr;
 	UTankTurret* TankTurret = nullptr;
@@ -38,7 +48,13 @@ protected:
 	EFiringStatus FiringStatus = EFiringStatus::Aiming;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float LaunchSpeed = 100000; // sensible starting value of 1000 m/s
+	float LaunchSpeed = 4000; // sensible starting value of 1000 m/s
 
-	void MoveBarrelTowards(FVector AimDirection);
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float ReloadTimeInSeconds = 3000;
+
+	float LastFireTime = 0;
 };

@@ -5,40 +5,27 @@
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "TankAimingComponent.h"
 
-ATankPlayerController::ATankPlayerController()
-{
-	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-}
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
-
-	if (ensure(AimingComponent))
-	{
-		FoundAimingComponent(AimingComponent);
-	}
+	if (!ensure(AimingComponent)) { return; }
+	FoundAimingComponent(AimingComponent);
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	AimTowardsCrosshair();
-
-	//UE_LOG(LogTemp, Warning, TEXT("Tick is working on player controller."))
 }
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
 	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 
-	if (ensure(AimingComponent))
-	{
-		FoundAimingComponent(AimingComponent);
-	}
-
+	if (!ensure(AimingComponent)) { return;  }
+	
 	FVector HitLocation; // Out Parameter
 	if (GetSightRayHitLocation(HitLocation))
 	{
@@ -64,20 +51,6 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) cons
 	return true;
 }
 
-bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
-{
-	FVector CameraWorldLocation; // to be discarded
-	FVector WorldDirection;
-
-	DeprojectScreenPositionToWorld(
-		ScreenLocation.X, 
-		ScreenLocation.Y, 
-		CameraWorldLocation, 
-		LookDirection);
-
-	return true;
-}
-
 bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector & HitLocation) const
 {
 	FHitResult HitResult;
@@ -96,4 +69,14 @@ bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVec
 	}
 	HitLocation = FVector(0);
 	return false; // Line trace didn't succeed
+}
+
+bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
+{
+	FVector CameraWorldLocation; // to be discarded
+	return DeprojectScreenPositionToWorld(
+		ScreenLocation.X,
+		ScreenLocation.Y,
+		CameraWorldLocation,
+		LookDirection);
 }
